@@ -17,7 +17,12 @@ class Configuration:
     NUM_CLASSES = 10
     EPOCHS = 5
 
-config = Configuration()    
+config = Configuration() 
+
+#Constants for TensorBoard
+LOGS_DIR = "/tmp/tb/tf_logs/CIFAR_10_INVOLUTION/" # Add path as required
+HIST_FREQ = 1
+PROFILE_BATCH = (500,520)
 
 # Credits : https://github.com/keras-team/keras-io/blob/master/examples/vision/involution.py
 
@@ -136,9 +141,11 @@ in_conv_model = tf.keras.Sequential([
 
 # Debug: in_conv_model.summary()
 
+tBoardCallback = tf.keras.callbacks.TensorBoard(LOGS_DIR,histogram_freq = HIST_FREQ,profile_batch = PROFILE_BATCH)
+
 in_conv_model.compile(loss="sparse_categorical_crossentropy",optimizer="adam",metrics=["accuracy"])
 
-in_conv_hist = in_conv_model.fit(TrainDataset,epochs= config.EPOCHS,validation_data=TestDataset)
+in_conv_hist = in_conv_model.fit(TrainDataset,epochs= config.EPOCHS,validation_data=TestDataset,callbacks = [tBoardCallback])
 
 icscore = in_conv_model.evaluate(TestDataset)
 
